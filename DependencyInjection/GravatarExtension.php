@@ -22,12 +22,6 @@ class GravatarExtension extends Extension
         $container->getDefinition('gravatar.api')->addArgument($parameters);
     }
 
-    public function twigLoad($config, ContainerBuilder $container)
-    {
-        $loader = new XmlFileLoader($container, __DIR__.'/../Resources/config');
-        $loader->load('twig.xml');
-    }
-
     /**
      * Returns the base path for the XSD files.
      *

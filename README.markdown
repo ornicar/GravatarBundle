@@ -18,7 +18,7 @@ Installation
               );
           }
 
-  3. Configure the `gravatar` service and helper in your config:
+  3. Configure the `gravatar` service, templating helper and Twig extension in your config:
 
           # application/config/config.yml
           gravatar.config: ~
@@ -30,10 +30,6 @@ Installation
             rating: g
             size: 80
             default: ~
-
-  5. If you use Twig and this in your config:
-
-         gravatar.twig: ~
 
 Usage
 =====
@@ -50,11 +46,17 @@ The only required parameter is the email adress. The rest have default values.
 
 If you use twig you can use the helper like this exemple:
 
-      {% gravatar "alias@domain.tld" %}
+      {{ gravatar('alias@domain.tld') }}
+
+Or if you want to check if a gravatar email exists: 
+
+      {% if gravatar_exists('alias@domain.tld') %}
+            The email is an gravatar email
+      {% endif %}
       
 Or with parameters:
 
-      {% gravatar "alias@domain.tld" with ['size': '80', 'rating' : 'g', 'default': 'defaultimage.png'] %}
+      {{ gravatar('alias@domain.tld', site, rating, default) }}
 
 For more information [look at the gravatar implementation pages][gravatar].
 

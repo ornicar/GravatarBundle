@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="templating.helper.gravatar.class">Bundle\GravatarBundle\Templating\Helper\GravatarHelper</parameter>
+        <parameter key="twig.extension.gravatar.class">Bundle\GravatarBundle\Twig\GravatarExtension</parameter>
         <parameter key="gravatar.api.class">Bundle\GravatarBundle\GravatarApi</parameter>
     </parameters>
 
@@ -14,6 +15,11 @@
 
         <service id="templating.helper.gravatar" class="%templating.helper.gravatar.class%">
             <tag name="templating.helper" alias="gravatar" />
+            <argument type="service" id="gravatar.api" />
+        </service>
+
+        <service id="twig.extension.gravatar" class="%twig.extension.gravatar.class%">
+            <tag name="twig.extension" alias="gravatar" />
             <argument type="service" id="gravatar.api" />
         </service>
     </services>
