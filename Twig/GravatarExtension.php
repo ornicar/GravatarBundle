@@ -26,11 +26,11 @@ class GravatarExtension extends \Twig_Extension
     /**
      * @return array
      */
-    public function getGlobals()
+    public function getFunctions()
     {
         return array(
-            'fn_gravatar' => new \Twig_Function($this->api, 'getUrl'),
-            'fn_gravatar_exists' => new \Twig_Function($this->api, 'exists'),
+            'gravatar' => new \Twig_Function_Method($this, 'getUrl'),
+            'gravatar_exists' => new \Twig_Function_Method($this, 'exists'),
         );
     }
 
@@ -40,5 +40,15 @@ class GravatarExtension extends \Twig_Extension
     public function getName()
     {
         return 'gravatar';
-    }    
+    }
+
+    public function getUrl($email, $size = null, $rating = null, $default = null)
+    {
+        return $this->api->getUrl($email, $size, $rating, $default);
+    }
+
+    public function exists($email)
+    {
+        return $this->api->exists($email);
+    }
 }
