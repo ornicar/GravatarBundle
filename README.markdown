@@ -56,7 +56,7 @@ Or if you want to check if a gravatar email exists:
       
 Or with parameters:
 
-      {{ gravatar('alias@domain.tld', site, rating, default) }}
+      {{ gravatar('alias@domain.tld', size, rating, default) }}
 
 For more information [look at the gravatar implementation pages][gravatar].
 
