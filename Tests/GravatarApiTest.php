@@ -1,6 +1,6 @@
 <?php
 
-namespace Bundle\GravatarBunde\Tests;
+namespace Bundle\GravatarBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Bundle\GravatarBundle\GravatarApi;
