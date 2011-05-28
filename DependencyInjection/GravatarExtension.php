@@ -4,7 +4,7 @@ namespace Bundle\GravatarBundle\DependencyInjection;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 
 class GravatarExtension extends Extension
@@ -14,15 +14,10 @@ class GravatarExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(array(__DIR__.'/../Resources/config')));
         $loader->load('config.xml');
 
-        $parameters = array();
-        foreach ($configs as $config) {
-            foreach (array('size', 'rating', 'default') as $key) {
-                if (isset($config[$key])) {
-                    $parameters[$key] = $config[$key];
-                }
-            }
-        }
+        $configuration = new Configuration();
+        $processor = new Processor();
+        $config = $processor->process($configuration->getConfigTree(), $configs);
 
-        $container->getDefinition('gravatar.api')->addArgument($parameters);
+        $container->getDefinition('gravatar.api')->addArgument($config );
     }
 }

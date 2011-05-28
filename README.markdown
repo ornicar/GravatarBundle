@@ -29,7 +29,7 @@ Installation
          gravatar:
             rating: g
             size: 80
-            default: ~
+            default: mm
 
 Usage
 =====
