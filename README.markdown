@@ -21,12 +21,12 @@ Installation
   3. Configure the `gravatar` service, templating helper and Twig extension in your config:
 
           # application/config/config.yml
-          gravatar.config: ~
+          gravatar: ~
 
   4. If you always have some default for your gravatars such as size, rating or default it can be configured in your config
 
          # application/config/config.yml
-         gravatar.config:
+         gravatar:
             rating: g
             size: 80
             default: ~
