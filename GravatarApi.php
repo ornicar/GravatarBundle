@@ -47,6 +47,20 @@ class GravatarApi
     {
         $hash = md5(strtolower($email));
 
+        return $this->getUrlForHash($hash, $size, $rating, $default);
+    }
+
+    /**
+     * Returns a url for a gravatar for the given hash.
+     *
+     * @param  string  $hash
+     * @param  integer $size
+     * @param  string  $rating
+     * @param  string  $default
+     * @return string
+     */
+    public function getUrlForHash($hash, $size = null, $rating = null, $default = null)
+    {
         $map = array(
             's' => $size    ?: $this->defaults['size'],
             'r' => $rating  ?: $this->defaults['rating'],

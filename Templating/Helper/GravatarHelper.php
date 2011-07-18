@@ -47,13 +47,27 @@ class GravatarHelper implements HelperInterface
     {
         return $this->api->getUrl($email, $size, $rating, $default);
     }
-    
+
+    /**
+     * Returns a url for a gravatar for a given hash
+     *
+     * @param  string  $hash
+     * @param  integer $size
+     * @param  string  $rating
+     * @param  string  $default
+     * @return string
+     */
+    public function getUrlForHash($hash, $size = null, $rating = null, $default = null)
+    {
+        return $this->api->getUrlForHash($hash, $size, $rating, $default);
+    }
+
     public function render($email, array $options = array())
     {
         $size = isset($options['size'])?$options['size']:null;
         $rating = isset($options['rating'])?$options['rating']:null;
         $default = isset($options['default'])?$options['default']:null;
-        
+
         return $this->api->getUrl($email, $size, $rating, $default);
     }
 
