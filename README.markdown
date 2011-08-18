@@ -40,7 +40,7 @@ All you have to do is use the helper like this example:
 
 Or with parameters:
 
-      <img src="<?php echo $view['gravatar']->getUrl('alias@domain.tld', '80', 'g', 'defaultimage.png') ?>" />
+      <img src="<?php echo $view['gravatar']->getUrl('alias@domain.tld', '80', 'g', 'defaultimage.png', true) ?>" />
 
 The only required parameter is the email adress. The rest have default values.
 
@@ -48,15 +48,15 @@ If you use twig you can use the helper like this exemple:
 
       {{ gravatar('alias@domain.tld') }}
 
-Or if you want to check if a gravatar email exists: 
+Or if you want to check if a gravatar email exists:
 
       {% if gravatar_exists('alias@domain.tld') %}
             The email is an gravatar email
       {% endif %}
-      
+
 Or with parameters:
 
-      {{ gravatar('alias@domain.tld', size, rating, default) }}
+      {{ gravatar('alias@domain.tld', size, rating, default, secure) }}
 
 For more information [look at the gravatar implementation pages][gravatar].
 

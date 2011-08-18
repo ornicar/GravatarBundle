@@ -2,25 +2,26 @@
 
 namespace Bundle\GravatarBundle\Twig;
 
-use Bundle\GravatarBundle\GravatarApi;
+use Bundle\GravatarBundle\Templating\Helper\GravatarHelper,
+    Bundle\GravatarBundle\Templating\Helper\GravatarHelperInterface;
 
 /**
  * @author Thibault Duplessis
  * @author Henrik Bjornskov   <hb@peytz.dk>
  */
-class GravatarExtension extends \Twig_Extension
+class GravatarExtension extends \Twig_Extension implements GravatarHelperInterface
 {
     /**
-     * @var GravatarApi $api
+     * @var GravatarHelper $baseHelper
      */
-    protected $api;
+    protected $baseHelper;
 
     /**
      * @param GravatarApi $api
      */
-    public function __construct(GravatarApi $api)
+    public function __construct(GravatarHelper $helper)
     {
-        $this->api = $api;
+        $this->baseHelper = $helper;
     }
 
     public function getFunctions()
@@ -32,19 +33,28 @@ class GravatarExtension extends \Twig_Extension
         );
     }
 
-    public function getUrl($email, $size = null, $rating = null, $default = null)
+    /**
+     * {@inheritDoc}
+     */
+    public function getUrl($email, $size = null, $rating = null, $default = null, $secure = null)
     {
-        return $this->api->getUrl($email, $size, $rating, $default);
+        return $this->baseHelper->getUrl($email, $size, $rating, $default, $secure);
     }
 
-    public function getUrlForHash($hash, $size = null, $rating = null, $default = null)
+    /**
+     * {@inheritDoc}
+     */
+    public function getUrlForHash($hash, $size = null, $rating = null, $default = null, $secure = null)
     {
-        return $this->api->getUrlForHash($hash, $size, $rating, $default);
+        return $this->baseHelper->getUrlForHash($hash, $size, $rating, $default, $secure);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function exists($email)
     {
-        return $this->api->exists($email);
+        return $this->baseHelper->exists($email);
     }
 
     /**

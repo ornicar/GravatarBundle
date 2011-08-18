@@ -2,7 +2,8 @@
 
 namespace Bundle\GravatarBundle\Templating\Helper;
 
-use Symfony\Component\Templating\Helper\HelperInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface,
+    Symfony\Component\Templating\Helper\Helper;
 use Bundle\GravatarBundle\GravatarApi;
 
 /**
@@ -11,17 +12,17 @@ use Bundle\GravatarBundle\GravatarApi;
  * @author Thibault Duplessis
  * @author Henrik Bjornskov <henrik@bearwoods.dk>
  */
-class GravatarHelper implements HelperInterface
+class GravatarHelper extends Helper implements GravatarHelperInterface
 {
-    /**
-     * @var string $charset
-     */
-    protected $charset = 'UTF-8';
-
     /**
      * @var Bundle\GravatarBundle\GravatarApi $api
      */
     protected $api;
+
+    /**
+     * @var ContainerInterface $container
+     */
+    protected $container;
 
     /**
      * Constructor
@@ -29,37 +30,26 @@ class GravatarHelper implements HelperInterface
      * @param Bundle\GravatarBundle\GravatarApi $api
      * @return void
      */
-    public function __construct(GravatarApi $api)
+    public function __construct(GravatarApi $api, ContainerInterface $container = null)
     {
         $this->api = $api;
+        $this->container = $container;
     }
 
     /**
-     * Returns a url for a gravatar
-     *
-     * @param  string  $email
-     * @param  integer $size
-     * @param  string  $rating
-     * @param  string  $default
-     * @return string
+     * {@inheritDoc}
      */
-    public function getUrl($email, $size = null, $rating = null, $default = null)
+    public function getUrl($email, $size = null, $rating = null, $default = null, $secure = null)
     {
-        return $this->api->getUrl($email, $size, $rating, $default);
+        return $this->api->getUrl($email, $size, $rating, $default, $this->isSecure($secure));
     }
 
     /**
-     * Returns a url for a gravatar for a given hash
-     *
-     * @param  string  $hash
-     * @param  integer $size
-     * @param  string  $rating
-     * @param  string  $default
-     * @return string
+     * {@inheritDoc}
      */
-    public function getUrlForHash($hash, $size = null, $rating = null, $default = null)
+    public function getUrlForHash($hash, $size = null, $rating = null, $default = null, $secure = null)
     {
-        return $this->api->getUrlForHash($hash, $size, $rating, $default);
+        return $this->api->getUrlForHash($hash, $size, $rating, $default, $this->isSecure($secure));
     }
 
     public function render($email, array $options = array())
@@ -67,15 +57,13 @@ class GravatarHelper implements HelperInterface
         $size = isset($options['size'])?$options['size']:null;
         $rating = isset($options['rating'])?$options['rating']:null;
         $default = isset($options['default'])?$options['default']:null;
+        $secure = $this->isSecure();
 
-        return $this->api->getUrl($email, $size, $rating, $default);
+        return $this->api->getUrl($email, $size, $rating, $default, $secure);
     }
 
     /**
-     * Returns true if a avatar could be found for the email
-     *
-     * @param string $email
-     * @return boolean
+     * {@inheritDoc}
      */
     public function exists($email)
     {
@@ -83,23 +71,14 @@ class GravatarHelper implements HelperInterface
     }
 
     /**
-     * Sets the default charset.
+     * Returns true if avatar should be fetched over secure connection
      *
-     * @param string $charset The charset
+     * @param mixed $preset
+     * @return Boolean
      */
-    public function setCharset($charset)
+    protected function isSecure($preset = null)
     {
-        $this->charset = $charset;
-    }
-
-    /**
-     * Gets the default charset.
-     *
-     * @return string The default charset
-     */
-    public function getCharset()
-    {
-        return $this->charset;
+        return (null === $preset && $this->container && $this->container->has('request') ? $this->container->get('request')->isSecure() : !!$preset);
     }
 
     /**

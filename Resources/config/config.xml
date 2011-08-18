@@ -16,11 +16,12 @@
         <service id="templating.helper.gravatar" class="%templating.helper.gravatar.class%">
             <tag name="templating.helper" alias="gravatar" />
             <argument type="service" id="gravatar.api" />
+            <argument type="service" id="service_container" />
         </service>
 
         <service id="twig.extension.gravatar" class="%twig.extension.gravatar.class%">
             <tag name="twig.extension" alias="gravatar" />
-            <argument type="service" id="gravatar.api" />
+            <argument type="service" id="templating.helper.gravatar" />
         </service>
     </services>
 </container>

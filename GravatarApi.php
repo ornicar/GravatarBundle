@@ -15,7 +15,7 @@ namespace Bundle\GravatarBundle;
 class GravatarApi
 {
     /**
-     * @var array $default array of default options that can be overriden with getters and in the construct.
+     * @var array $defaults Array of default options that can be overriden with getters and in the construct.
      */
     protected $defaults = array(
         'size'    => 80,
@@ -41,13 +41,14 @@ class GravatarApi
      * @param  integer $size
      * @param  string  $rating
      * @param  string  $default
+     * @param  Boolean $secure
      * @return string
      */
-    public function getUrl($email, $size = null, $rating = null, $default = null)
+    public function getUrl($email, $size = null, $rating = null, $default = null, $secure = false)
     {
         $hash = md5(strtolower($email));
 
-        return $this->getUrlForHash($hash, $size, $rating, $default);
+        return $this->getUrlForHash($hash, $size, $rating, $default, $secure);
     }
 
     /**
@@ -57,9 +58,10 @@ class GravatarApi
      * @param  integer $size
      * @param  string  $rating
      * @param  string  $default
+     * @param  Boolean $secure
      * @return string
      */
-    public function getUrlForHash($hash, $size = null, $rating = null, $default = null)
+    public function getUrlForHash($hash, $size = null, $rating = null, $default = null, $secure = false)
     {
         $map = array(
             's' => $size    ?: $this->defaults['size'],
@@ -67,7 +69,7 @@ class GravatarApi
             'd' => $default ?: $this->defaults['default'],
         );
 
-        return 'http://www.gravatar.com/avatar/' . $hash . '?' . http_build_query(array_filter($map));
+        return ($secure ? 'https://secure' : 'http://www') . '.gravatar.com/avatar/' . $hash . '?' . http_build_query(array_filter($map));
     }
 
     /**
@@ -75,7 +77,7 @@ class GravatarApi
      * body returned.
      *
      * @param string $email
-     * @return boolean
+     * @return Boolean
      */
     public function exists($email)
     {
