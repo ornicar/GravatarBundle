@@ -3,30 +3,38 @@ Installation
 
   1. Add this bundle to your project as Git submodules:
 
-          $ git submodule add git://github.com/ornicar/GravatarBundle.git src/Bundle/GravatarBundle
+          $ git submodule add git://github.com/ornicar/GravatarBundle.git vendor/bundles/Ornicar/GravatarBundle
 
+  2. Add the Ornicar namespace to your autoloader
 
-  2. Add this bundle to your application's kernel:
+          // app/autoload.php
+
+          $loader->registerNamespaces(array(
+             'Ornicar' => __DIR__.'/../vendor/bundles',
+             // your other namespaces
+          );
+
+  3. Add this bundle to your application's kernel:
 
           // application/ApplicationKernel.php
           public function registerBundles()
           {
               return array(
                   // ...
-                  new Bundle\GravatarBundle\GravatarBundle(),
+                  new Ornicar\GravatarBundle\OrnicarGravatarBundle(),
                   // ...
               );
           }
 
-  3. Configure the `gravatar` service, templating helper and Twig extension in your config:
+  4. Configure the `gravatar` service, templating helper and Twig extension in your config:
 
           # application/config/config.yml
-          gravatar: ~
+          ornicar_gravatar: ~
 
-  4. If you always have some default for your gravatars such as size, rating or default it can be configured in your config
+  5. If you always have some default for your gravatars such as size, rating or default it can be configured in your config
 
          # application/config/config.yml
-         gravatar:
+         ornicar_gravatar:
             rating: g
             size: 80
             default: mm

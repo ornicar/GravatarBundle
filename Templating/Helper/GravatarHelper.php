@@ -1,10 +1,10 @@
 <?php
 
-namespace Bundle\GravatarBundle\Templating\Helper;
+namespace Ornicar\GravatarBundle\Templating\Helper;
 
 use Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\Templating\Helper\Helper;
-use Bundle\GravatarBundle\GravatarApi;
+use Ornicar\GravatarBundle\GravatarApi;
 
 /**
  * Symfony 2 Helper for Gravatar. Uses Bundle\GravatarBundle\GravatarApi
@@ -15,7 +15,7 @@ use Bundle\GravatarBundle\GravatarApi;
 class GravatarHelper extends Helper implements GravatarHelperInterface
 {
     /**
-     * @var Bundle\GravatarBundle\GravatarApi $api
+     * @var Ornicar\GravatarBundle\GravatarApi $api
      */
     protected $api;
 
@@ -27,7 +27,7 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
     /**
      * Constructor
      *
-     * @param Bundle\GravatarBundle\GravatarApi $api
+     * @param Ornicar\GravatarBundle\GravatarApi $api
      * @return void
      */
     public function __construct(GravatarApi $api, ContainerInterface $container = null)

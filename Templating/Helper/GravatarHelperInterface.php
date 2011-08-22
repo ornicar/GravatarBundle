@@ -1,6 +1,6 @@
 <?php
 
-namespace Bundle\GravatarBundle\Templating\Helper;
+namespace Ornicar\GravatarBundle\Templating\Helper;
 
 interface GravatarHelperInterface
 {

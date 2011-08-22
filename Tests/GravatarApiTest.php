@@ -1,9 +1,9 @@
 <?php
 
-namespace Bundle\GravatarBundle\Tests;
+namespace Ornicar\GravatarBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
-use Bundle\GravatarBundle\GravatarApi;
+use Ornicar\GravatarBundle\GravatarApi;
 
 class GravatarApiTest extends TestCase
 {

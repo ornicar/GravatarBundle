@@ -1,6 +1,6 @@
 <?php
 
-namespace Bundle\GravatarBundle;
+namespace Ornicar\GravatarBundle;
 
 /**
  * Simple wrapper to the gravatar API

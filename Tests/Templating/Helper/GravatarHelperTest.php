@@ -1,10 +1,10 @@
 <?php
 
-namespace Bundle\GravatarBundle\Tests\Templating\Helper;
+namespace Ornicar\GravatarBundle\Tests\Templating\Helper;
 
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
-use Bundle\GravatarBundle\GravatarApi;
-use Bundle\GravatarBundle\Templating\Helper\GravatarHelper;
+use Ornicar\GravatarBundle\GravatarApi;
+use Ornicar\GravatarBundle\Templating\Helper\GravatarHelper;
 
 class GravatarHelperTest extends TestCase
 {

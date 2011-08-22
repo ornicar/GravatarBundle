@@ -1,9 +1,9 @@
 <?php
 
-namespace Bundle\GravatarBundle\Twig;
+namespace Ornicar\GravatarBundle\Twig;
 
-use Bundle\GravatarBundle\Templating\Helper\GravatarHelper,
-    Bundle\GravatarBundle\Templating\Helper\GravatarHelperInterface;
+use Ornicar\GravatarBundle\Templating\Helper\GravatarHelper,
+    Ornicar\GravatarBundle\Templating\Helper\GravatarHelperInterface;
 
 /**
  * @author Thibault Duplessis

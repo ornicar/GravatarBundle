@@ -1,10 +1,10 @@
 <?php
 
-namespace Bundle\GravatarBundle;
+namespace Ornicar\GravatarBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle as BaseBundle;
 
-class GravatarBundle extends BaseBundle
+class OrnicarGravatarBundle extends BaseBundle
 {
     public function getNamespace()
     {
