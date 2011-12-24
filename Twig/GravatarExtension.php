@@ -2,8 +2,7 @@
 
 namespace Ornicar\GravatarBundle\Twig;
 
-use Ornicar\GravatarBundle\Templating\Helper\GravatarHelper,
-    Ornicar\GravatarBundle\Templating\Helper\GravatarHelperInterface;
+use Ornicar\GravatarBundle\Templating\Helper\GravatarHelperInterface;
 
 /**
  * @author Thibault Duplessis
@@ -19,7 +18,7 @@ class GravatarExtension extends \Twig_Extension implements GravatarHelperInterfa
     /**
      * @param GravatarApi $api
      */
-    public function __construct(GravatarHelper $helper)
+    public function __construct(GravatarHelperInterface $helper)
     {
         $this->baseHelper = $helper;
     }
@@ -27,9 +26,9 @@ class GravatarExtension extends \Twig_Extension implements GravatarHelperInterfa
     public function getFunctions()
     {
         return array(
-            'gravatar'          => new \Twig_Function_Method($this, 'getUrl'),
-            'gravatar_hash'     => new \Twig_Function_Method($this, 'getUrlForHash'),
-            'gravatar_exists'   => new \Twig_Function_Method($this, 'exists'),
+            'gravatar'        => new \Twig_Function_Method($this, 'getUrl'),
+            'gravatar_hash'   => new \Twig_Function_Method($this, 'getUrlForHash'),
+            'gravatar_exists' => new \Twig_Function_Method($this, 'exists'),
         );
     }
 
@@ -62,6 +61,6 @@ class GravatarExtension extends \Twig_Extension implements GravatarHelperInterfa
      */
     public function getName()
     {
-        return 'gravatar';
+        return 'ornicar_gravatar';
     }
 }

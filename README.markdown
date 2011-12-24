@@ -1,5 +1,10 @@
+OrnicarGravatarBundle
+=====================
+
+[![Build Status](https://secure.travis-ci.org/ornicar/GravatarBundle.png)](http://travis-ci.org/ornicar/GravatarBundle)
+
 Installation
-============
+------------
 
   1. Add this bundle to your project as Git submodules:
 
@@ -40,7 +45,7 @@ Installation
             default: mm
 
 Usage
-=====
+-----
 
 All you have to do is use the helper like this example:
 
