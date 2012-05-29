@@ -82,8 +82,8 @@ class GravatarApi
      */
     public function exists($email)
     {
-        $path = $this->getUrl($email, null, null, '404');
-	 	$ch = curl_init();
+		$path = $this->getUrl($email, null, null, '404');
+		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $path);
 		if($this->defaults['proxy'])
 		{
