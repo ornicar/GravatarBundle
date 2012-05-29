@@ -21,6 +21,7 @@ class GravatarApi
         'size'    => 80,
         'rating'  => 'g',
         'default' => null,
+        'proxy' => false
     );
 
     /**
@@ -82,14 +83,23 @@ class GravatarApi
     public function exists($email)
     {
         $path = $this->getUrl($email, null, null, '404');
-
-        $sock = fsockopen('gravatar.com', 80, $errorNo, $error);
-        fputs($sock, "HEAD " . $path . " HTTP/1.0\r\n\r\n");
-
-        $header = fgets($sock, 128);
-
-        fclose($sock);
-
-        return trim($header) == 'HTTP/1.1 404 Not Found' ? false : true;
+	 	$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $path);
+		if($this->defaults['proxy'])
+		{
+			$url = $this->defaults['proxy']['url'];
+			$port = $this->defaults['proxy']['port'];
+			curl_setopt($ch, CURLOPT_PROXY, $url);
+			curl_setopt($ch, CURLOPT_PROXYPORT, $port);		
+		}
+		curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_NOBODY, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 10); //follow up to 10 redirections - avoids loops
+		$data = curl_exec($ch);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);  
+		curl_close($ch);
+		return $httpcode >= 200 && $httpcode < 300 ? true : false;
     }
 }
