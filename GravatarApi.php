@@ -82,22 +82,22 @@ class GravatarApi
      */
     public function exists($email)
     {
-			$path = $this->getUrl($email, null, null, '404');
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $path);
-			if($this->defaults['proxy'])
-			{
-				curl_setopt($ch, CURLOPT_PROXY, $this->defaults['proxy']['url']);
-				curl_setopt($ch, CURLOPT_PROXYPORT, $this->defaults['proxy']['port']);		
-			}
-			curl_setopt($ch, CURLOPT_HEADER, true);
-			curl_setopt($ch, CURLOPT_NOBODY, true);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-			$data = curl_exec($ch);
-			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);  
-			curl_close($ch);
-			return $httpcode >= 200 && $httpcode < 300 ? true : false;
+	$path = $this->getUrl($email, null, null, '404');
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $path);
+	if($this->defaults['proxy'])
+	{
+		curl_setopt($ch, CURLOPT_PROXY, $this->defaults['proxy']['url']);
+		curl_setopt($ch, CURLOPT_PROXYPORT, $this->defaults['proxy']['port']);		
+	}
+	curl_setopt($ch, CURLOPT_HEADER, true);
+	curl_setopt($ch, CURLOPT_NOBODY, true);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+	$data = curl_exec($ch);
+	$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);  
+	curl_close($ch);
+	return $httpcode >= 200 && $httpcode < 300 ? true : false;
     }
 }
