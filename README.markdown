@@ -59,13 +59,13 @@ Or with parameters:
 
 The only required parameter is the email adress. The rest have default values.
 
-If you use twig you can use the helper like this exemple:
+If you use twig you can use the helper like this example:
 
       {{ gravatar('alias@domain.tld') }}
 
 Or if you want to check if a gravatar email exists:
 
-      {% if gravatar_exits  s('alias@domain.tld') %}
+      {% if gravatar_exitss('alias@domain.tld') %}
             The email is an gravatar email
       {% endif %}
 
