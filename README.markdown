@@ -36,7 +36,7 @@ Installation
           # application/config/config.yml
           ornicar_gravatar: ~
 
-  5. If you always have some default for your gravatars such as size, rating or default or to use a proxy to check if a gravatar exists it can be configured in your config
+  5. If you always have some default for your gravatars such as size, rating or default or to use a proxy to check i a gravatar exists it can be configured in your config
 
          # application/config/config.yml
          ornicar_gravatar:
@@ -65,7 +65,7 @@ If you use twig you can use the helper like this example:
 
 Or if you want to check if a gravatar email exists:
 
-      {% if gravatar_exitss('alias@domain.tld') %}
+      {% if gravatar_exists('alias@domain.tld') %}
             The email is an gravatar email
       {% endif %}
 
