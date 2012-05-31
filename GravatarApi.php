@@ -83,20 +83,41 @@ class GravatarApi
     public function exists($email)
     {
         $path = $this->getUrl($email, null, null, '404');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $path);
-        if($this->defaults['proxy']){
+        die(var_dump($proxy));
+        if(true === $this->defaults['proxy']) {
+        
+            // user cURL if we're using a proxy
+            $ch = curl_init();
+            
+            curl_setopt($ch, CURLOPT_URL, $path);
             curl_setopt($ch, CURLOPT_PROXY, $this->defaults['proxy']['url']);
-            curl_setopt($ch, CURLOPT_PROXYPORT, $this->defaults['proxy']['port']);		
+            curl_setopt($ch, CURLOPT_PROXYPORT, $this->defaults['proxy']['port']);
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_NOBODY, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+            
+            $data = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);  
+            curl_close($ch);
+        
+            return $httpCode >= 200 && $httpCode < 300 ? true : false;  
+        
         }
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-        $data = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);  
-        curl_close($ch);
-       return $httpcode >= 200 && $httpcode < 300 ? true : false;
+        else {
+             
+            $path = $this->getUrl($email, null, null, '404');
+
+            $sock = fsockopen('gravatar.com', 80, $errorNo, $error);
+            fputs($sock, "HEAD " . $path . " HTTP/1.0\r\n\r\n");
+
+            $header = fgets($sock, 128);
+
+            fclose($sock);
+
+            return trim($header) == 'HTTP/1.1 404 Not Found' ? false : true;   
+        
+        }
     }
 }
