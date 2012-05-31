@@ -22,10 +22,9 @@ class Configuration
                 ->scalarNode('rating')->defaultValue('g')->end()
                 ->scalarNode('default')->defaultValue('mm')->end()
                 ->arrayNode('proxy')
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('url')->defaultValue(null)->end()
-                            ->scalarNode('port')->defaultValue(null)->end()
+                    ->children()
+                        ->scalarNode('url')->defaultValue(null)->end()
+                        ->scalarNode('port')->defaultValue(null)->end()
                     ->end()
                 ->end();
 
