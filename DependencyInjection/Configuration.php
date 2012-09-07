@@ -21,7 +21,12 @@ class Configuration
                 ->scalarNode('size')->defaultValue('80')->end()
                 ->scalarNode('rating')->defaultValue('g')->end()
                 ->scalarNode('default')->defaultValue('mm')->end()
-            ->end();
+                ->arrayNode('proxy')
+                    ->children()
+                        ->scalarNode('url')->defaultValue(null)->end()
+                        ->scalarNode('port')->defaultValue(null)->end()
+                    ->end()
+                ->end();
 
         return $treeBuilder->buildTree();
     }
