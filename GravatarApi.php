@@ -46,7 +46,7 @@ class GravatarApi
      */
     public function getUrl($email, $size = null, $rating = null, $default = null, $secure = false)
     {
-        $hash = md5(strtolower($email));
+        $hash = md5(strtolower(trim($email)));
 
         return $this->getUrlForHash($hash, $size, $rating, $default, $secure);
     }
