@@ -78,7 +78,15 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     protected function isSecure($preset = null)
     {
-        return (null === $preset && $this->container && $this->container->has('request') ? $this->container->get('request')->isSecure() : !!$preset);
+        if (null !== $preset) {
+            return !!$preset;
+        }
+
+        if (!$this->container || !$this->container->has('router')) {
+            return false;
+        }
+
+        return 'https' == strtolower($this->container->get('router')->getContext()->getScheme());
     }
 
     /**
