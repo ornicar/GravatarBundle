@@ -90,6 +90,6 @@ class GravatarApi
 
         fclose($sock);
 
-        return trim($header) == 'HTTP/1.1 404 Not Found' ? false : true;
+        return strpos($header, '404') ? false : true;
     }
 }
