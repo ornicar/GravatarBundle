@@ -21,6 +21,7 @@ class Configuration
                 ->scalarNode('size')->defaultValue('80')->end()
                 ->scalarNode('rating')->defaultValue('g')->end()
                 ->scalarNode('default')->defaultValue('mm')->end()
+                ->booleanNode('secure')->defaultFalse()->end()
             ->end();
 
         return $treeBuilder->buildTree();

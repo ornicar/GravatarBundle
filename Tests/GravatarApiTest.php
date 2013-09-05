@@ -40,7 +40,7 @@ class GravatarApiTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($api->exists('somefake@email.com'));
 
-        $this->assertTrue($api->exists('henrik@bearwoods.dk'));
+        $this->assertTrue($api->exists('henrik@bjrnskov.dk'));
     }
 
 }

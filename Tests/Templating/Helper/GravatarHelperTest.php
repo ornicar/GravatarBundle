@@ -29,7 +29,7 @@ class GravatarHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckForAvatarExistance()
     {
-        $this->assertTrue($this->helper->exists('henrik@bearwoods.dk'));
+        $this->assertTrue($this->helper->exists('henrik@bjrnskov.dk'));
         $this->assertFalse($this->helper->exists('someone@someonefake.lol'));
     }
 }
