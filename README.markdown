@@ -54,7 +54,7 @@ Or with parameters:
 
 The only required parameter is the email adress. The rest have default values.
 
-If you use twig you can use the helper like this exemple:
+If you use twig you can use the helper like this example:
 
       {{ gravatar('alias@domain.tld') }}
 
