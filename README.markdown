@@ -91,3 +91,24 @@ Or with parameters:
 For more information [look at the gravatar implementation pages][gravatar].
 
 [gravatar]: http://en.gravatar.com/site/implement/
+
+
+Cache support
+-------------
+
+You can inject a cache service based on the Doctrine\Common\Cache (e.g. ApcCache)
+
+Add the following configuration to your bundle:
+
+```
+services:
+    acme_cache_adapter:
+        class: "Doctrine\Common\Cache\ApcCache"
+
+cache:
+        adapter: acme_cache_adapter
+        lifetime: 30
+```
+
+The lifetime specifies for how many seconds to cache the Gravatar image (?).
+

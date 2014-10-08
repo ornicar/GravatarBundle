@@ -2,6 +2,8 @@
 
 namespace Ornicar\GravatarBundle;
 
+use Doctrine\Common\Cache\Cache;
+
 /**
  * Simple wrapper to the gravatar API
  * http://en.gravatar.com/site/implement/url
@@ -23,6 +25,12 @@ class GravatarApi
         'default' => null,
         'secure'  => false,
     );
+
+    /** @var Cache */
+    private $cache;
+
+    /** @var int */
+    private $lifetime;
 
     /**
      * Constructor
@@ -94,5 +102,21 @@ class GravatarApi
         $header = fgets($sock, 128);
         fclose($sock);
         return strpos($header, '404') ? false : true;
+    }
+
+    /**
+     * @param Cache $cache
+     */
+    public function setCache(Cache $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * @param int $lifetime
+     */
+    public function setLifetime($lifetime)
+    {
+        $this->lifetime = $lifetime;
     }
 }
