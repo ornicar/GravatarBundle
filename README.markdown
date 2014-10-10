@@ -93,22 +93,34 @@ For more information [look at the gravatar implementation pages][gravatar].
 [gravatar]: http://en.gravatar.com/site/implement/
 
 
-Cache support
--------------
+Cache configuration
+-------------------
 
 You can inject a cache service based on the Doctrine\Common\Cache (e.g. ApcCache)
 
 Add the following configuration to your bundle:
 
-```
+```yaml
 services:
     acme_cache_adapter:
         class: "Doctrine\Common\Cache\ApcCache"
-
 cache:
         adapter: acme_cache_adapter
         lifetime: 30
 ```
 
-The lifetime specifies for how many seconds to cache the Gravatar image (?).
+The lifetime specifies for how many seconds to cache the Gravatar image.
+We use the Guzzle HTTP client to retrieve the gravatar images.
 
+Cache route
+-----------
+
+We use the Symfony2 router component.
+You should configure the route to serve the cached Gravatar images.
+To include the route, you will have to add something like this to your `routing.yml` file.
+
+```yaml
+gravatar_image:
+    resource: "@OrnicarGravatarBundle/Resources/config/routing.xml"
+    prefix:   /gravatar/
+```

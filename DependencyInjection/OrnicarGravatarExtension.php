@@ -33,6 +33,16 @@ class OrnicarGravatarExtension extends Extension
                     )
                 )
             );
+
+            $container->getDefinition('gravatar.api')->addMethodCall(
+                'setRouter',
+                array(
+                    new Reference(
+                        'router',
+                        ContainerInterface::IGNORE_ON_INVALID_REFERENCE
+                    )
+                )
+            );
         }
 
         if (isset($config['cache']['lifetime'])) {

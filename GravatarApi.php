@@ -3,6 +3,11 @@
 namespace Ornicar\GravatarBundle;
 
 use Doctrine\Common\Cache\Cache;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Message\Response;
+use Ornicar\GravatarBundle\Exception\ImageTransferException;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Simple wrapper to the gravatar API
@@ -31,6 +36,12 @@ class GravatarApi
 
     /** @var int */
     private $lifetime;
+
+    /** @var RouterInterface */
+    private $router;
+
+    /** @var Client */
+    private $client;
 
     /**
      * Constructor
@@ -72,15 +83,13 @@ class GravatarApi
      */
     public function getUrlForHash($hash, $size = null, $rating = null, $default = null, $secure = null)
     {
-        $map = array(
-            's' => $size    ?: $this->defaults['size'],
-            'r' => $rating  ?: $this->defaults['rating'],
-            'd' => $default ?: $this->defaults['default'],
-        );
+        if ( $this->cache && $this->router ) {
+            $url = $this->generateCachedUrl($hash, $size, $rating, $default, $secure);
+        } else {
+            $url = $this->generateGravatarServiceUrl($hash, $size, $rating, $default, $secure);
+        }
 
-        $secure = $secure ?: $this->defaults['secure'];
-
-        return ($secure ? 'https://secure' : 'http://www') . '.gravatar.com/avatar/' . $hash . '?' . http_build_query(array_filter($map));
+        return $url;
     }
 
     /**
@@ -118,5 +127,117 @@ class GravatarApi
     public function setLifetime($lifetime)
     {
         $this->lifetime = $lifetime;
+    }
+
+    /**
+     * @param RouterInterface $router
+     */
+    public function setRouter(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
+    /**
+     * The the URL to access the Gravatar Service
+     *
+     * @param $hash
+     * @param $size
+     * @param $rating
+     * @param $default
+     * @param $secure
+     * @return string
+     */
+    private function generateGravatarServiceUrl($hash, $size, $rating, $default, $secure)
+    {
+        $map = array(
+            's' => $size    ?: $this->defaults['size'],
+            'r' => $rating  ?: $this->defaults['rating'],
+            'd' => $default ?: $this->defaults['default'],
+        );
+
+        $url  = '';
+        $url .= ($secure ? 'https://secure' : 'http://www') . '.gravatar.com/avatar/';
+        $url .= $hash . '?';
+        $url .= http_build_query(
+            array_filter($map)
+        );
+
+        return $url;
+    }
+
+    /**
+     * @param $hash
+     * @param $size
+     * @param $rating
+     * @param $default
+     * @param $secure
+     * @return string
+     */
+    private function generateCachedUrl($hash, $size, $rating, $default, $secure)
+    {
+        if( $this->router === null ) {
+            // Fallback?
+            $url = $this->generateGravatarServiceUrl($hash, $size, $rating, $default, $secure);
+        } else {
+            $url = $this->router->generate(
+                'ornicar_gravatar_image',
+                array(
+                    'hash' => $hash,
+                    'size' => $size ?: $this->defaults['size'],
+                    'rating' => $rating ?: $this->defaults['rating'],
+                    'default' => $default ?: $this->defaults['default'],
+                    'secure' => $secure ? '1' : '0',
+                )
+            );
+        }
+
+        return $url;
+    }
+
+
+    public function fetchImage($hash, $size, $rating, $default, $secure)
+    {
+        // Generate cache hash
+        $cacheKey = sha1($hash . $size . $rating . $default . $secure);
+
+        if ( $this->cache->contains($cacheKey) ) {
+            $image = unserialize($this->cache->fetch($cacheKey));
+        } else {
+            $gravatarUrl = $this->generateGravatarServiceUrl($hash, $size, $rating, $default, $secure);
+            $client = $this->getClient();
+
+            try {
+                /** @var Response $response */
+                $response = $client->get($gravatarUrl);
+            } catch (RequestException $e) {
+                // We catch any exception
+                throw new ImageTransferException($e->getMessage(), 0, $e);
+            }
+
+            $image = new GravatarImage(
+                $response->getBody()->getContents(),
+                $response->getBody()->getSize(),
+                'image/jpeg'
+            );
+
+            $this->cache->save($cacheKey, serialize($image), $this->lifetime);
+        }
+
+        return $image;
+    }
+
+    /**
+     * TODO: We should inject this
+     *
+     * @return Client
+     */
+    public function getClient()
+    {
+        if ( $this->client instanceof Client ) {
+            return $this->client;
+        } else {
+            $this->client = new Client();
+            return $this->client;
+        }
     }
 }
