@@ -103,10 +103,10 @@ Add the following configuration to your bundle:
 ```yaml
 services:
     acme_cache_adapter:
-        class: "Doctrine\Common\Cache\ApcCache"
+    class: "Doctrine\Common\Cache\ApcCache"
 cache:
-        adapter: acme_cache_adapter
-        lifetime: 30
+    adapter: acme_cache_adapter
+    lifetime: 30
 ```
 
 The lifetime specifies for how many seconds to cache the Gravatar image.
