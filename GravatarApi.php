@@ -199,27 +199,27 @@ class GravatarApi
         $cacheKey = sha1($hash . $size . $rating . $default . $secure);
 
         if ( $this->cache->contains($cacheKey) ) {
-            $image = unserialize($this->cache->fetch($cacheKey));
-        } else {
-            $gravatarUrl = $this->generateGravatarServiceUrl($hash, $size, $rating, $default, $secure);
-            $client = $this->getClient();
-
-            try {
-                /** @var Response $response */
-                $response = $client->get($gravatarUrl);
-            } catch (RequestException $e) {
-                // We catch any exception
-                throw new ImageTransferException($e->getMessage(), 0, $e);
-            }
-
-            $image = new GravatarImage(
-                $response->getBody()->getContents(),
-                $response->getBody()->getSize(),
-                'image/jpeg'
-            );
-
-            $this->cache->save($cacheKey, serialize($image), $this->lifetime);
+            return unserialize($this->cache->fetch($cacheKey));
         }
+
+        $gravatarUrl = $this->generateGravatarServiceUrl($hash, $size, $rating, $default, $secure);
+        $client = $this->getClient();
+
+        try {
+            /** @var Response $response */
+            $response = $client->get($gravatarUrl);
+        } catch (RequestException $e) {
+            // We catch any exception
+            throw new ImageTransferException($e->getMessage(), 0, $e);
+        }
+
+        $image = new GravatarImage(
+            $response->getBody()->getContents(),
+            $response->getBody()->getSize(),
+            'image/jpeg'
+        );
+
+        $this->cache->save($cacheKey, serialize($image), $this->lifetime);
 
         return $image;
     }
