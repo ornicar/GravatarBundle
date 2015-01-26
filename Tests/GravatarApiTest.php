@@ -13,8 +13,8 @@ class GravatarApiTest extends \PHPUnit_Framework_TestCase
         $api = new GravatarApi();
         $this->assertEquals('http://www.gravatar.com/avatar/0aa61df8e35327ac3b3bc666525e0bee?s=80&r=g', $api->getUrl('henrik@bearwoods.dk   '));
 
-        $cache = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Cache\CacheMock');
-        $router = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Router\RouterMock');
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
         $router->method('generate')->willReturn('http://localhost/gravatar/image/0aa61df8e35327ac3b3bc666525e0bee/80/g/mm/0');
 
         $api->setCache($cache);
@@ -28,8 +28,8 @@ class GravatarApiTest extends \PHPUnit_Framework_TestCase
         $api = new GravatarApi();
         $this->assertEquals('https://secure.gravatar.com/avatar/0aa61df8e35327ac3b3bc666525e0bee?s=80&r=g', $api->getUrl('henrik@bearwoods.dk', null, null, null, true));
 
-        $cache = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Cache\CacheMock');
-        $router = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Router\RouterMock');
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
         $router->method('generate')->willReturn('http://localhost/gravatar/image/0aa61df8e35327ac3b3bc666525e0bee/80/g/mm/1');
 
         $api->setCache($cache);
@@ -43,8 +43,8 @@ class GravatarApiTest extends \PHPUnit_Framework_TestCase
         $api = new GravatarApi();
         $this->assertEquals('http://www.gravatar.com/avatar/0aa61df8e35327ac3b3bc666525e0bee?s=80&r=g&d=mm', $api->getUrl('henrik@bearwoods.dk', 80, 'g', 'mm'));
 
-        $cache = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Cache\CacheMock');
-        $router = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Router\RouterMock');
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
         $router->method('generate')->willReturn('http://localhost/gravatar/image/0aa61df8e35327ac3b3bc666525e0bee/80/g/mm/0');
 
         $api->setCache($cache);
@@ -62,8 +62,8 @@ class GravatarApiTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('http://www.gravatar.com/avatar/0aa61df8e35327ac3b3bc666525e0bee?s=20&r=g&d=mm', $api->getUrl('henrik@bearwoods.dk'));
 
-        $cache = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Cache\CacheMock');
-        $router = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Router\RouterMock');
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
         $router->method('generate')->willReturn('http://localhost/gravatar/image/0aa61df8e35327ac3b3bc666525e0bee/20/g/mm/0');
 
         $api->setCache($cache);
@@ -85,14 +85,14 @@ class GravatarApiTest extends \PHPUnit_Framework_TestCase
     {
         $api = $this->getMock('Ornicar\GravatarBundle\GravatarApi', array('getClient'));
 
-        $cache = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Cache\CacheMock');
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
         $cache->method('contains')->willReturn(false);
 
         $api->setCache($cache);
 
-        $client = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Client\ClientMock');
-        $response = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Client\ResponseMock');
-        $body = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Client\ResponseBodyMock');
+        $client = $this->getMock('GuzzleHttp\ClientInterface');
+        $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
+        $body = $this->getMock('GuzzleHttp\Stream\StreamInterface');
 
         $body->method('getContents')->willReturn('This is some content');
         $body->method('getSize')->willReturn(50);
@@ -112,7 +112,7 @@ class GravatarApiTest extends \PHPUnit_Framework_TestCase
     {
         $api = $this->getMock('Ornicar\GravatarBundle\GravatarApi', array('getClient'));
 
-        $cache = $this->getMock('Ornicar\GravatarBundle\Tests\Mock\Cache\CacheMock');
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
         $cache->method('contains')->willReturn(true);
 
         $gravatarImage = new GravatarImage(
