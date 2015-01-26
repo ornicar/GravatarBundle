@@ -177,21 +177,19 @@ class GravatarApi
     {
         if( $this->router === null ) {
             // Fallback?
-            $url = $this->generateGravatarServiceUrl($hash, $size, $rating, $default, $secure);
-        } else {
-            $url = $this->router->generate(
-                'ornicar_gravatar_image',
-                array(
-                    'hash' => $hash,
-                    'size' => $size ?: $this->defaults['size'],
-                    'rating' => $rating ?: $this->defaults['rating'],
-                    'default' => $default ?: $this->defaults['default'],
-                    'secure' => $secure ? '1' : '0',
-                )
-            );
+            return $this->generateGravatarServiceUrl($hash, $size, $rating, $default, $secure);
         }
 
-        return $url;
+        return $this->router->generate(
+            'ornicar_gravatar_image',
+            array(
+                'hash' => $hash,
+                'size' => $size ?: $this->defaults['size'],
+                'rating' => $rating ?: $this->defaults['rating'],
+                'default' => $default ?: $this->defaults['default'],
+                'secure' => $secure ? '1' : '0',
+            )
+        );
     }
 
 
