@@ -98,13 +98,19 @@ Cache configuration
 
 You can inject a cache service based on the Doctrine\Common\Cache (e.g. ApcCache)
 
-Add the following configuration to your bundle:
+Add the following configuration:
 
 ```yaml
+# application/config/services.yml
 services:
-    acme_cache_adapter:
+  acme_cache_adapter:
     class: "Doctrine\Common\Cache\ApcCache"
-cache:
+```
+
+```yaml
+# application/config/config.yml
+ornicar_gravatar:
+  cache:
     adapter: acme_cache_adapter
     lifetime: 30
 ```
@@ -116,10 +122,11 @@ Cache route
 -----------
 
 We use the Symfony2 router component.
-You should configure the route to serve the cached Gravatar images.
-To include the route, you will have to add something like this to your `routing.yml` file.
+You have to configure the route to serve the cached Gravatar images by
+adding the following configuration:
 
 ```yaml
+# application/config/routing.yml
 gravatar_image:
     resource: "@OrnicarGravatarBundle/Resources/config/routing.xml"
     prefix:   /gravatar/
