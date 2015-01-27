@@ -233,9 +233,10 @@ class GravatarApi
     {
         if ( $this->client instanceof Client ) {
             return $this->client;
-        } else {
-            $this->client = new Client();
-            return $this->client;
         }
+
+        $this->client = new Client();
+
+        return $this->client;
     }
 }
