@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GravatarController extends Controller
 {
-    public function getImageAction($hash, $size, $rating, $default, $secure)
+    public function showAction($hash, $size, $rating, $default, $secure)
     {
         /** @var GravatarApi $gravatar */
         $gravatar = $this->get('gravatar.api');
