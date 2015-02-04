@@ -66,9 +66,7 @@ class GravatarApi
      */
     public function getUrl($email, $size = null, $rating = null, $default = null, $secure = null)
     {
-        $hash = md5(strtolower(trim($email)));
-
-        return $this->getUrlForHash($hash, $size, $rating, $default, $secure);
+        return $this->getUrlForHash($this->getHash($email), $size, $rating, $default, $secure);
     }
 
     /**
@@ -101,7 +99,17 @@ class GravatarApi
      */
     public function exists($email)
     {
-        $path = $this->getUrl($email, null, null, '404');
+        $hash = $this->getHash($email);
+
+        // Generate cache key
+        $cacheKey = sha1($hash . null . null . '404' . null);
+
+        if ( $this->cache && $this->cache->contains($cacheKey) ) {
+            return unserialize($this->cache->fetch($cacheKey));
+        }
+
+        // Always get the gravatar URL instead of the cached one
+        $path = $this->generateGravatarServiceUrl($hash, null, null, '404', null);
 
         if (!$sock = @fsockopen('gravatar.com', 80, $errorNo, $error)) {
             return null;
@@ -110,7 +118,18 @@ class GravatarApi
         fputs($sock, "HEAD " . $path . " HTTP/1.0\r\n\r\n");
         $header = fgets($sock, 128);
         fclose($sock);
-        return strpos($header, '404') ? false : true;
+
+        if (strpos($header, '404')) {
+            $exists = false;
+        } else {
+            $exists = true;
+        }
+
+        if ( $this->cache ) {
+            $this->cache->save($cacheKey, serialize($exists), $this->lifetime);
+        }
+
+        return $exists;
     }
 
     /**
@@ -238,5 +257,10 @@ class GravatarApi
         $this->client = new Client();
 
         return $this->client;
+    }
+
+    private function getHash($email)
+    {
+        return md5(strtolower(trim($email)));
     }
 }

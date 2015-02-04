@@ -72,12 +72,33 @@ class GravatarApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://localhost/gravatar/image/0aa61df8e35327ac3b3bc666525e0bee/20/g/mm/0', $api->getUrl('henrik@bearwoods.dk'));
     }
 
-    public function testGravatarExists()
+    public function testGravatarExistsNotCached()
     {
         $api = new GravatarApi();
 
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $cache->method('contains')->willReturn(false);
+
+        $api->setCache($cache);
+
+        $this->assertFalse($api->exists('somefake@email.com'));
+        $this->assertTrue($api->exists('henrik@bjrnskov.dk'));
+    }
+
+    public function testGravatarExistsCached()
+    {
+        $api = new GravatarApi();
+
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $cache->method('contains')->willReturn(true);
+        $cache->method('fetch')->willReturn(serialize(false));
+        $api->setCache($cache);
         $this->assertFalse($api->exists('somefake@email.com'));
 
+        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $cache->method('contains')->willReturn(true);
+        $cache->method('fetch')->willReturn(serialize(true));
+        $api->setCache($cache);
         $this->assertTrue($api->exists('henrik@bjrnskov.dk'));
     }
 
