@@ -26,11 +26,11 @@ class GravatarExtension extends \Twig_Extension implements GravatarHelperInterfa
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('gravatar', array($this, 'getUrl')),
-            new \Twig_SimpleFunction('gravatar_hash', array($this, 'getUrlForHash')),
-            new \Twig_SimpleFunction('gravatar_profile', array($this, 'getProfileUrl')),
-            new \Twig_SimpleFunction('gravatar_profile_hash', array($this, 'getProfileUrlForHash')),
-            new \Twig_SimpleFunction('gravatar_exists', array($this, 'exists')),
+            new \Twig_Function('gravatar', array($this, 'getUrl')),
+            new \Twig_Function('gravatar_hash', array($this, 'getUrlForHash')),
+            new \Twig_Function('gravatar_profile', array($this, 'getProfileUrl')),
+            new \Twig_Function('gravatar_profile_hash', array($this, 'getProfileUrlForHash')),
+            new \Twig_Function('gravatar_exists', array($this, 'exists')),
         );
     }
 
