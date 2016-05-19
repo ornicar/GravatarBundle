@@ -2,8 +2,8 @@
 
 namespace Ornicar\GravatarBundle\Templating\Helper;
 
-use Ornicar\GravatarBundle\GravatarApi;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Ornicar\GravatarBundle\Api\GravatarClientInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Templating\Helper\Helper;
 
 /**
@@ -15,24 +15,25 @@ use Symfony\Component\Templating\Helper\Helper;
 class GravatarHelper extends Helper implements GravatarHelperInterface
 {
     /**
-     * @var Ornicar\GravatarBundle\GravatarApi
+     * @var GravatarClientInterface
      */
-    protected $api;
+    protected $client;
 
     /**
-     * @var ContainerInterface
+     * @var RouterInterface
      */
-    protected $container;
+    protected $router;
 
     /**
      * Constructor.
      *
-     * @param Ornicar\GravatarBundle\GravatarApi $api
+     * @param GravatarClientInterface $client
+     * @param RouterInterface         $router
      */
-    public function __construct(GravatarApi $api, ContainerInterface $container = null)
+    public function __construct(GravatarClientInterface $client, RouterInterface $router = null)
     {
-        $this->api = $api;
-        $this->container = $container;
+        $this->client = $client;
+        $this->router = $router;
     }
 
     /**
@@ -40,7 +41,7 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function getUrl($email, $size = null, $rating = null, $default = null, $secure = null)
     {
-        return $this->api->getUrl($email, $size, $rating, $default, $this->isSecure($secure));
+        return $this->client->getUrl($email, $size, $rating, $default, $this->isSecure($secure));
     }
 
     /**
@@ -48,7 +49,7 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function getUrlForHash($hash, $size = null, $rating = null, $default = null, $secure = null)
     {
-        return $this->api->getUrlForHash($hash, $size, $rating, $default, $this->isSecure($secure));
+        return $this->client->getUrlForHash($hash, $size, $rating, $default, $this->isSecure($secure));
     }
 
     /**
@@ -56,7 +57,7 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function getProfileUrl($email, $secure = null)
     {
-        return $this->api->getProfileUrl($email, $this->isSecure($secure));
+        return $this->client->getProfileUrl($email, $this->isSecure($secure));
     }
 
     /**
@@ -64,17 +65,17 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function getProfileUrlForHash($hash, $secure = null)
     {
-        return $this->api->getProfileUrlForHash($hash, $this->isSecure($secure));
+        return $this->client->getProfileUrlForHash($hash, $this->isSecure($secure));
     }
 
-    public function render($email, array $options = array())
+    public function render($email, array $options = [])
     {
         $size = isset($options['size']) ? $options['size'] : null;
         $rating = isset($options['rating']) ? $options['rating'] : null;
         $default = isset($options['default']) ? $options['default'] : null;
         $secure = $this->isSecure();
 
-        return $this->api->getUrl($email, $size, $rating, $default, $secure);
+        return $this->client->getUrl($email, $size, $rating, $default, $secure);
     }
 
     /**
@@ -82,7 +83,7 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function exists($email)
     {
-        return $this->api->exists($email);
+        return $this->client->exists($email);
     }
 
     /**
@@ -98,11 +99,11 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
             return !!$preset;
         }
 
-        if (!$this->container || !$this->container->has('router')) {
+        if (!$this->router) {
             return false;
         }
 
-        return 'https' == strtolower($this->container->get('router')->getContext()->getScheme());
+        return 'https' == strtolower($this->router->getContext()->getScheme());
     }
 
     /**
