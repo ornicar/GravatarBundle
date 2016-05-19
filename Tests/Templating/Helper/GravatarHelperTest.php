@@ -2,7 +2,7 @@
 
 namespace Ornicar\GravatarBundle\Tests\Templating\Helper;
 
-use Ornicar\GravatarBundle\GravatarApi;
+use Ornicar\GravatarBundle\Api\GravatarClient;
 use Ornicar\GravatarBundle\Templating\Helper\GravatarHelper;
 
 class GravatarHelperTest extends \PHPUnit_Framework_TestCase
@@ -11,7 +11,7 @@ class GravatarHelperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->helper = new GravatarHelper(new GravatarApi());
+        $this->helper = new GravatarHelper(new GravatarClient());
     }
 
     public function testGetUrlReturnsTheCorrectUrl()

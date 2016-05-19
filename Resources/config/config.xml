@@ -8,15 +8,35 @@
         <parameter key="templating.helper.gravatar.class">Ornicar\GravatarBundle\Templating\Helper\GravatarHelper</parameter>
         <parameter key="twig.extension.gravatar.class">Ornicar\GravatarBundle\Twig\GravatarExtension</parameter>
         <parameter key="gravatar.api.class">Ornicar\GravatarBundle\GravatarApi</parameter>
+
+        <parameter key="gravatar.client.class">Ornicar\GravatarBundle\Api\GravatarClient</parameter>
+        <parameter key="gravatar.client.cached.class">Ornicar\GravatarBundle\Api\CachedGravatarClient</parameter>
+        <parameter key="gravatar.cache.filesystem.class">Ornicar\GravatarBundle\Cache\FileCache</parameter>
     </parameters>
 
     <services>
-        <service id="gravatar.api" class="%gravatar.api.class%" />
+        <service id="gravatar.api" class="%gravatar.api.class%">
+            <argument type="collection" /> <!-- For BC -->
+            <argument type="service" id="gravatar.client.real" />
+        </service>
+
+        <service id="gravatar.client.real" class="%gravatar.client.class%">
+            <argument type="collection" />
+        </service>
+
+        <service id="gravatar.client.cached" class="%gravatar.client.cached.class%" abstract="true">
+            <argument type="service" id="gravatar.client.real" />
+            <argument />
+        </service>
+
+        <service id="gravatar.cache.filesystem" class="%gravatar.cache.filesystem.class%" public="false">
+            <argument>%kernel.cache_dir%/gravatar</argument>
+        </service>
 
         <service id="templating.helper.gravatar" class="%templating.helper.gravatar.class%">
             <tag name="templating.helper" alias="gravatar" />
-            <argument type="service" id="gravatar.api" />
-            <argument type="service" id="service_container" />
+            <argument type="service" id="gravatar.client" />
+            <argument type="service" id="router" on-invalid="null" />
         </service>
 
         <service id="twig.extension.gravatar" class="%twig.extension.gravatar.class%">

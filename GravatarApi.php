@@ -2,6 +2,9 @@
 
 namespace Ornicar\GravatarBundle;
 
+use Ornicar\GravatarBundle\Api\GravatarClient;
+use Ornicar\GravatarBundle\Api\GravatarClientInterface;
+
 /**
  * Simple wrapper to the gravatar API
  * http://en.gravatar.com/site/implement/url.
@@ -15,23 +18,23 @@ namespace Ornicar\GravatarBundle;
 class GravatarApi
 {
     /**
-     * @var array Array of default options that can be overriden with getters and in the construct.
+     * @var GravatarClientInterface
      */
-    protected $defaults = array(
-        'size'    => 80,
-        'rating'  => 'g',
-        'default' => null,
-        'secure'  => false,
-    );
+    private $client;
 
     /**
      * Constructor.
      *
-     * @param array $options the array is merged with the defaults.
+     * @param array                   $options For BC
+     * @param GravatarClientInterface $client
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = array(), GravatarClientInterface $client = null)
     {
-        $this->defaults = array_merge($this->defaults, $options);
+        if (!$client) {
+            $client = new GravatarClient($client);
+        }
+
+        $this->client = $client;
     }
 
     /**
@@ -47,9 +50,7 @@ class GravatarApi
      */
     public function getUrl($email, $size = null, $rating = null, $default = null, $secure = null)
     {
-        $hash = md5(strtolower(trim($email)));
-
-        return $this->getUrlForHash($hash, $size, $rating, $default, $secure);
+        return $this->client->getUrl($email, $size, $rating, $default, $secure);
     }
 
     /**
@@ -65,15 +66,7 @@ class GravatarApi
      */
     public function getUrlForHash($hash, $size = null, $rating = null, $default = null, $secure = null)
     {
-        $map = array(
-            's' => $size    ?: $this->defaults['size'],
-            'r' => $rating  ?: $this->defaults['rating'],
-            'd' => $default ?: $this->defaults['default'],
-        );
-
-        $secure = $secure ?: $this->defaults['secure'];
-
-        return ($secure ? 'https://secure' : 'http://www').'.gravatar.com/avatar/'.$hash.'?'.http_build_query(array_filter($map));
+        return $this->client->getUrlForHash($hash, $size, $rating, $default, $secure);
     }
 
     /**
@@ -86,9 +79,7 @@ class GravatarApi
      */
     public function getProfileUrl($email, $secure = null)
     {
-        $hash = md5(strtolower(trim($email)));
-
-        return $this->getProfileUrlForHash($hash, $secure);
+        return $this->client->getProfileUrl($email, $secure);
     }
 
     /**
@@ -101,9 +92,7 @@ class GravatarApi
      */
     public function getProfileUrlForHash($hash, $secure = null)
     {
-        $secure = $secure ?: $this->defaults['secure'];
-
-        return ($secure ? 'https://secure' : 'http://www').'.gravatar.com/'.$hash;
+        return $this->client->getProfileUrlForHash($hash, $secure);
     }
 
     /**
@@ -116,16 +105,6 @@ class GravatarApi
      */
     public function exists($email)
     {
-        $path = $this->getUrl($email, null, null, '404');
-
-        if (!$sock = @fsockopen('gravatar.com', 80, $errorNo, $error)) {
-            return;
-        }
-
-        fputs($sock, 'HEAD '.$path." HTTP/1.0\r\n\r\n");
-        $header = fgets($sock, 128);
-        fclose($sock);
-
-        return strpos($header, '404') ? false : true;
+        return $this->client->exists($email);
     }
 }
