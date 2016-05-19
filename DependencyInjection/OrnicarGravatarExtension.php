@@ -22,12 +22,12 @@ class OrnicarGravatarExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->getDefinition('gravatar.client.real')->replaceArgument(0, [
+        $container->getDefinition('gravatar.client.real')->replaceArgument(0, array(
             'size'    => $config['size'],
             'rating'  => $config['rating'],
             'default' => $config['default'],
             'secure'  => $config['secure'],
-        ]);
+        ));
 
         if ($config['cache']) {
             $container->getDefinition('gravatar.client.cached')->setAbstract(false);

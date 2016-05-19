@@ -68,7 +68,7 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
         return $this->client->getProfileUrlForHash($hash, $this->isSecure($secure));
     }
 
-    public function render($email, array $options = [])
+    public function render($email, array $options = array())
     {
         $size = isset($options['size']) ? $options['size'] : null;
         $rating = isset($options['rating']) ? $options['rating'] : null;
