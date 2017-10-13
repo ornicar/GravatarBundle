@@ -20,7 +20,7 @@ Installation
   2. Run composer update to install the bundle and regenerate the autoloader
   
   ```bash
-  $ composer update ornicar/gravatar-bundle
+  $ composer require ornicar/gravatar-bundle
   ```
 
   3. Add this bundle to your application's kernel:
