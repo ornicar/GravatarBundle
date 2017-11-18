@@ -30,6 +30,8 @@ matrix:
       env: SYMFONY_VERSION=2.8.*@dev
     - php: 5.6
       env: SYMFONY_VERSION="3.0.x-dev as 2.8"
+    - php: 7.1
+      env: SYMFONY_VERSION="^4.0-BETA"
   allow_failures:
     - php: nightly
     - php: hhvm
@@ -38,9 +40,6 @@ matrix:
 
 before_script:
   - composer selfupdate
-  - composer config -g github-oauth.github.com $GITHUB_OAUTH_TOKEN
-  - composer global require phpunit/phpunit:4.* --no-update
-  - composer global update --prefer-dist --no-interaction
   - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
   - composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 

@@ -4,7 +4,7 @@ namespace Ornicar\GravatarBundle\Tests;
 
 use Ornicar\GravatarBundle\GravatarApi;
 
-class GravatarApiTest extends \PHPUnit_Framework_TestCase
+class GravatarApiTest extends \PHPUnit\Framework\TestCase
 {
     public function testGravatarUrlWithDefaultOptions()
     {

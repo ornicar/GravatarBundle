@@ -14,11 +14,12 @@
     }],
     "require": {
         "php": ">=5.3.0",
-        "symfony/framework-bundle" : "~3.0|~2.0"
+        "symfony/framework-bundle" : "~3.0|~2.0|^4.0-BETA"
     },
     "require-dev": {
         "twig/extensions": "1.0.*",
-        "symfony/phpunit-bridge": "~2.7"
+        "symfony/phpunit-bridge": "~2.7",
+        "phpunit/phpunit": "^4.8 | ^5.7"
     },
     "suggest" : {
         "twig/twig" : "For gravatar twig extension usage"
@@ -38,4 +39,3 @@
         }
     }
 }
-
