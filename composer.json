@@ -18,7 +18,8 @@
     },
     "require-dev": {
         "twig/extensions": "1.0.*",
-        "symfony/phpunit-bridge": "~2.7"
+        "symfony/phpunit-bridge": "~2.7",
+        "phpunit/phpunit": "^4.8 | ^5.7"
     },
     "suggest" : {
         "twig/twig" : "For gravatar twig extension usage"
