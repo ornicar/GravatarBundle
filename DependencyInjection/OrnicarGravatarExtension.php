@@ -19,6 +19,9 @@ class OrnicarGravatarExtension extends Extension
         $processor = new Processor();
         $config = $processor->process($configuration->getConfigTreeBuilder()->buildTree(), $configs);
 
+        $container->setParameter('gravatar.cache_service', $config['cache_service']);
+        $container->setParameter('gravatar.cache_ttl', $config['cache_ttl']);
+
         $container->getDefinition('gravatar.api')->addArgument($config);
     }
 }

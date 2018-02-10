@@ -2,6 +2,7 @@
 
 namespace Ornicar\GravatarBundle\Templating\Helper;
 
+use Doctrine\Common\Cache\Cache;
 use Ornicar\GravatarBundle\GravatarApi;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Templating\Helper\Helper;
@@ -25,15 +26,29 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
     protected $router;
 
     /**
+     * @var Cache
+     */
+    protected $cache;
+
+    /**
+     * @var int
+     */
+    protected $ttl = 0;
+
+    /**
      * Constructor.
      *
-     * @param GravatarApi $api
+     * @param GravatarApi          $api
      * @param RouterInterface|null $router
+     * @param Cache|null           $cache
+     * @param int                  $ttl
      */
-    public function __construct(GravatarApi $api, RouterInterface $router = null)
+    public function __construct(GravatarApi $api, RouterInterface $router = null, Cache $cache = null, $ttl = 0)
     {
         $this->api = $api;
         $this->router = $router;
+        $this->cache = $cache;
+        $this->ttl = $ttl;
     }
 
     /**
@@ -41,7 +56,14 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function getUrl($email, $size = null, $rating = null, $default = null, $secure = true)
     {
-        return $this->api->getUrl($email, $size, $rating, $default, $this->isSecure($secure));
+        $key = 'url_'.$email.$size.$rating;
+        if (null !== $cachedData = $this->getCachedData($key)) {
+            return $cachedData;
+        }
+        $url = $this->api->getUrl($email, $size, $rating, $default, $this->isSecure($secure));
+        $this->setCachedData($key, $url);
+
+        return $url;
     }
 
     /**
@@ -49,7 +71,14 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function getUrlForHash($hash, $size = null, $rating = null, $default = null, $secure = true)
     {
-        return $this->api->getUrlForHash($hash, $size, $rating, $default, $this->isSecure($secure));
+        $key = 'url_hash_'.$hash.$size.$rating;
+        if (null !== $cachedData = $this->getCachedData($key)) {
+            return $cachedData;
+        }
+        $url = $this->api->getUrlForHash($hash, $size, $rating, $default, $this->isSecure($secure));
+        $this->setCachedData($key, $url);
+
+        return $url;
     }
 
     /**
@@ -57,7 +86,14 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function getProfileUrl($email, $secure = true)
     {
-        return $this->api->getProfileUrl($email, $this->isSecure($secure));
+        $key = 'profile_'.$email;
+        if (null !== $cachedData = $this->getCachedData($key)) {
+            return $cachedData;
+        }
+        $url = $this->api->getProfileUrl($email, $this->isSecure($secure));
+        $this->setCachedData($key, $url);
+
+        return $url;
     }
 
     /**
@@ -65,7 +101,14 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function getProfileUrlForHash($hash, $secure = true)
     {
-        return $this->api->getProfileUrlForHash($hash, $this->isSecure($secure));
+        $key = 'profile_url_hash_'.$hash;
+        if (null !== $cachedData = $this->getCachedData($key)) {
+            return $cachedData;
+        }
+        $url = $this->api->getProfileUrlForHash($hash, $this->isSecure($secure));
+        $this->setCachedData($key, $url);
+
+        return $url;
     }
 
     public function render($email, array $options = array())
@@ -75,7 +118,7 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
         $default = isset($options['default']) ? $options['default'] : null;
         $secure = $this->isSecure();
 
-        return $this->api->getUrl($email, $size, $rating, $default, $secure);
+        return $this->getUrl($email, $size, $rating, $default, $secure);
     }
 
     /**
@@ -83,7 +126,14 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
      */
     public function exists($email)
     {
-        return $this->api->exists($email);
+        $key = 'exists_'.$email;
+        if (null !== $cachedData = $this->getCachedData($key)) {
+            return $cachedData;
+        }
+        $exists = $this->api->exists($email);
+        $this->setCachedData($key, $exists);
+
+        return $exists;
     }
 
     /**
@@ -114,5 +164,32 @@ class GravatarHelper extends Helper implements GravatarHelperInterface
         }
 
         return 'https' == strtolower($this->router->getContext()->getScheme());
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
+    protected function getCachedData($key)
+    {
+        if (null === $this->cache) {
+            return null;
+        }
+        $cachedData = $this->cache->fetch($key);
+        if ($cachedData !== false) {
+            return $cachedData;
+        }
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $data
+     */
+    protected function setCachedData($key, $data)
+    {
+        if (null !== $this->cache) {
+            $this->cache->save($key, $data, $this->ttl);
+        }
     }
 }
