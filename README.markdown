@@ -94,3 +94,24 @@ Or with parameters:
 For more information [look at the gravatar implementation pages][gravatar].
 
 [gravatar]: http://en.gravatar.com/site/implement/
+
+Caching
+-------
+
+You can cache calls to Gravatar API, using [DoctrineCache](https://symfony.com/doc/current/bundles/DoctrineCacheBundle/index.html).
+
+If you configure a cache provider, you can pass it to bundle options.
+For example, suppose that you configured an APC cache provider named "apc_cache", like explained in
+[documentation example](https://symfony.com/doc/current/bundles/DoctrineCacheBundle/usage.html#service-aliases).
+You can specify such service name in bundle configuration:
+
+
+```yaml
+# application/config/config.yml
+ornicar_gravatar:
+    cache_service: apc_cache
+    ttl: 600
+```
+
+The `ttl` option is the cache time to live (in this case, the cache is lasting for ten minutes).
+Default value for `ttl` is 300 (correspondig to five minutes).

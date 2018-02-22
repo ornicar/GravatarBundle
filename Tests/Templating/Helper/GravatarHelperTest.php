@@ -2,6 +2,7 @@
 
 namespace Ornicar\GravatarBundle\Tests\Templating\Helper;
 
+use Doctrine\Common\Cache\Cache;
 use Ornicar\GravatarBundle\GravatarApi;
 use Ornicar\GravatarBundle\Templating\Helper\GravatarHelper;
 use PHPUnit\Framework\TestCase;
@@ -48,5 +49,14 @@ class GravatarHelperTest extends TestCase
     {
         $this->assertTrue($this->helper->exists('henrik@bjrnskov.dk'));
         $this->assertFalse($this->helper->exists('someone@someonefake.lol'));
+    }
+
+    public function testGetUrlReturnsCachedUrl()
+    {
+        $cache = $this->createMock(Cache::class);
+        $helper = new GravatarHelper(new GravatarApi(), null, $cache, 300);
+        $cache->expects($this->once())->method('fetch')->with('url_garakkio@gmail.com')->willReturn('dummycachedhash');
+        $url = $helper->getUrl('garakkio@gmail.com');
+        $this->assertEquals('dummycachedhash', $url);
     }
 }

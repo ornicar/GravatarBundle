@@ -17,6 +17,8 @@
             <tag name="templating.helper" alias="gravatar" />
             <argument type="service" id="gravatar.api" />
             <argument type="service" id="router" />
+            <argument type="expression">service(container.hasParameter('gravatar.cache_service') ? parameter('gravatar.cache_service') : 'doctrine_cache.providers.void')</argument>
+            <argument>%gravatar.cache_ttl%</argument>
         </service>
 
         <service id="twig.extension.gravatar" class="%twig.extension.gravatar.class%">

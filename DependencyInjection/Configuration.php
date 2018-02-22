@@ -20,6 +20,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('rating')->defaultValue('g')->end()
                 ->scalarNode('default')->defaultValue('mm')->end()
                 ->booleanNode('secure')->defaultFalse()->end()
+                ->scalarNode('cache_service')->end()
+                ->scalarNode('cache_ttl')->defaultValue('300')->end()
             ->end();
 
         return $treeBuilder;
