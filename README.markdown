@@ -98,7 +98,7 @@ For more information [look at the gravatar implementation pages][gravatar].
 Caching
 -------
 
-You can cache calls to Gravatar API, using [DoctrineCahce](https://symfony.com/doc/current/bundles/DoctrineCacheBundle/index.html).
+You can cache calls to Gravatar API, using [DoctrineCache](https://symfony.com/doc/current/bundles/DoctrineCacheBundle/index.html).
 
 If you configure a cache provider, you can pass it to bundle options.
 For example, suppose that you configured an APC cache provider named "apc_cache", like explained in
